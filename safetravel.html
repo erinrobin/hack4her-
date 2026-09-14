@@ -173,6 +173,20 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
 .score-legend{display:flex;gap:8px;padding-top:10px;border-top:1px solid var(--blue-mid)}
 .legend-item{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600}
 .legend-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.trust-card{background:var(--teal-soft);border:1px solid rgba(14,140,106,0.25);border-radius:var(--radius-lg);padding:18px 20px;margin-top:24px}
+.trust-card .explainer-title{color:#0a6b50}
+.trust-dot{background:rgba(14,140,106,0.12);color:#0a6b50;border:1px solid rgba(14,140,106,0.3)}
+.trust-footer{font-size:11px;color:#0a6b50;font-weight:600;text-align:center;padding-top:10px;border-top:1px solid rgba(14,140,106,0.25)}
+.splash-screen{position:fixed;inset:0;z-index:2000;background:linear-gradient(135deg,var(--navy-deep) 0%,var(--navy-mid) 60%,#1565c0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s ease,visibility 0.6s ease;opacity:1;visibility:visible}
+.splash-screen.hide{opacity:0;visibility:hidden;pointer-events:none}
+.splash-logo-mark{width:64px;height:64px;background:rgba(255,255,255,0.15);border-radius:18px;display:flex;align-items:center;justify-content:center;margin-bottom:22px}
+.splash-logo-mark svg{width:34px;height:34px;fill:white}
+.splash-title{font-family:'DM Serif Display',serif;font-size:30px;color:white;text-align:center;line-height:1.3;margin-bottom:8px}
+.splash-title em{font-style:italic;color:rgba(255,255,255,0.75)}
+.splash-sub{font-size:13px;color:rgba(255,255,255,0.6);text-align:center;letter-spacing:0.02em}
+.splash-loader{margin-top:30px;width:120px;height:3px;background:rgba(255,255,255,0.15);border-radius:2px;overflow:hidden}
+.splash-loader-bar{height:100%;width:0%;background:white;border-radius:2px;animation:splashLoad 5s linear forwards}
+@keyframes splashLoad{from{width:0%}to{width:100%}}
 
 /* ── AI COMPANION (chatbot) styles ────────────────────────────────────── */
 #sec-ai{padding:0}
@@ -283,7 +297,7 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
   <nav class="tab-nav">
     <button class="tab-btn active" onclick="showTab('before',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      Before
+      Before booking
     </button>
     <button class="tab-btn" onclick="showTab('after',this)">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -542,6 +556,7 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
           <div class="checkin-sub" id="checkin-sub">Enter your destination below to start tracking your arrival</div>
         </div>
 
+        <!-- destination form -->
         <div id="destination-input">
           <div style="font-size:15px;font-weight:600;color:var(--navy);margin-bottom:4px">Plan your arrival</div>
           <div style="font-size:13px;color:var(--gray-500);margin-bottom:16px">Enter your destination and expected arrival time</div>
@@ -560,6 +575,7 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
           <button class="book-btn" style="background:var(--teal)" onclick="confirmDestination()">Confirm destination</button>
         </div>
 
+        <!-- active check-in -->
         <div id="checkin-card" style="display:none">
           <div class="checkin-actions">
             <button class="btn-primary" onclick="doCheckin('safe')">
@@ -595,6 +611,7 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
           </div>
         </div>
 
+        <!-- safe confirmed state -->
         <div id="safe-confirmed" style="display:none">
           <div class="safe-confirmed">
             <div class="safe-confirmed-title">Contacts notified — you're all set!</div>
@@ -770,21 +787,18 @@ select:focus,input[type=text]:focus{border-color:var(--navy)}
 <div id="toast" class="notification-toast"></div>
 
 <script>
-// ── REVIEWS DATA ──────────────────────────────────────────────────────────────
 const REVIEWS = [{"property_name":"Aster Inn","city":"Berlin","country":"Germany","rating":"2.3","area_type":"suburban","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Terrace House","city":"Tokyo","country":"Japan","rating":"4.6","area_type":"central","traveler_type":"friends","accommodation_type":"luxury_hotel"},{"property_name":"Riverside Lodge","city":"Tokyo","country":"Japan","rating":"4.3","area_type":"residential","traveler_type":"business","accommodation_type":"mid_range_hotel"},{"property_name":"Nomad Residences","city":"Jakarta","country":"Indonesia","rating":"4.0","area_type":"waterfront","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Terrace Lofts","city":"Berlin","country":"Germany","rating":"3.0","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"luxury_hotel"},{"property_name":"Cedar Stay","city":"Jakarta","country":"Indonesia","rating":"4.2","area_type":"central","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Nomad Lofts Copenhagen","city":"Copenhagen","country":"Denmark","rating":"4.8","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Orchid Residences","city":"Cairo","country":"Egypt","rating":"4.5","area_type":"central","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Station Stay","city":"Jakarta","country":"Indonesia","rating":"4.2","area_type":"waterfront","traveler_type":"family","accommodation_type":"luxury_hotel"},{"property_name":"Terrace House Cairo","city":"Cairo","country":"Egypt","rating":"4.0","area_type":"suburban","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Juniper Residences","city":"Bangkok","country":"Thailand","rating":"4.0","area_type":"transit_hub","traveler_type":"business","accommodation_type":"hostel"},{"property_name":"Orchid Stay","city":"Tokyo","country":"Japan","rating":"4.9","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"boutique_hotel"},{"property_name":"Vista House Bogotá","city":"Bogotá","country":"Colombia","rating":"3.9","area_type":"transit_hub","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Aster Inn Mexico City","city":"Mexico City","country":"Mexico","rating":"4.2","area_type":"residential","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Luma Lodge","city":"Paris","country":"France","rating":"4.3","area_type":"central","traveler_type":"solo","accommodation_type":"mid_range_hotel"},{"property_name":"Cobalt Lofts","city":"Tokyo","country":"Japan","rating":"4.3","area_type":"central","traveler_type":"solo_female","accommodation_type":"mid_range_hotel"},{"property_name":"Luma Stay","city":"Tokyo","country":"Japan","rating":"4.7","area_type":"old_town","traveler_type":"business","accommodation_type":"luxury_hotel"},{"property_name":"Terrace Stay","city":"Bangkok","country":"Thailand","rating":"3.9","area_type":"suburban","traveler_type":"solo","accommodation_type":"hostel"},{"property_name":"Orchid Rooms","city":"Tokyo","country":"Japan","rating":"4.9","area_type":"waterfront","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Cobalt Lofts","city":"Jakarta","country":"Indonesia","rating":"4.5","area_type":"old_town","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Harbor House Paris","city":"Paris","country":"France","rating":"4.6","area_type":"suburban","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Lantern Lofts Copenhagen","city":"Copenhagen","country":"Denmark","rating":"4.7","area_type":"old_town","traveler_type":"solo","accommodation_type":"hostel"},{"property_name":"Cedar Rooms","city":"Lisbon","country":"Portugal","rating":"3.6","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Cedar Residences Tokyo","city":"Tokyo","country":"Japan","rating":"4.6","area_type":"nightlife_district","traveler_type":"friends","accommodation_type":"hostel"},{"property_name":"Mosaic Stay","city":"Milan","country":"Italy","rating":"4.7","area_type":"transit_hub","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Juniper House","city":"Bogotá","country":"Colombia","rating":"4.1","area_type":"old_town","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Vista Stay","city":"Jakarta","country":"Indonesia","rating":"1.7","area_type":"waterfront","traveler_type":"solo_female","accommodation_type":"mid_range_hotel"},{"property_name":"Aster Residences","city":"Jakarta","country":"Indonesia","rating":"4.1","area_type":"nightlife_district","traveler_type":"solo","accommodation_type":"hostel"},{"property_name":"Lantern Lodge","city":"Amsterdam","country":"Netherlands","rating":"4.4","area_type":"central","traveler_type":"friends","accommodation_type":"hostel"},{"property_name":"Terrace Inn Mexico City","city":"Mexico City","country":"Mexico","rating":"3.6","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Harbor Rooms","city":"Istanbul","country":"Turkiye","rating":"3.3","area_type":"old_town","traveler_type":"family","accommodation_type":"boutique_hotel"},{"property_name":"Cobalt Residences","city":"Bogotá","country":"Colombia","rating":"3.8","area_type":"residential","traveler_type":"family","accommodation_type":"mid_range_hotel"},{"property_name":"Harbor Lodge","city":"London","country":"United Kingdom","rating":"4.5","area_type":"central","traveler_type":"friends","accommodation_type":"boutique_hotel"},{"property_name":"Vista Residences","city":"Bogotá","country":"Colombia","rating":"4.4","area_type":"suburban","traveler_type":"friends","accommodation_type":"boutique_hotel"},{"property_name":"Cedar Residences Tokyo","city":"Tokyo","country":"Japan","rating":"4.3","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"hostel"},{"property_name":"Terrace Residences","city":"Bogotá","country":"Colombia","rating":"4.3","area_type":"waterfront","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Cobalt Inn","city":"Milan","country":"Italy","rating":"3.5","area_type":"residential","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Aster Stay","city":"Dubai","country":"United Arab Emirates","rating":"2.1","area_type":"central","traveler_type":"couple","accommodation_type":"luxury_hotel"},{"property_name":"Lantern Inn","city":"Copenhagen","country":"Denmark","rating":"4.3","area_type":"central","traveler_type":"friends","accommodation_type":"hostel"},{"property_name":"Station Residences London","city":"London","country":"United Kingdom","rating":"3.3","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Canal Rooms Milan","city":"Milan","country":"Italy","rating":"4.0","area_type":"central","traveler_type":"solo","accommodation_type":"budget_guesthouse"},{"property_name":"Aster Stay","city":"Copenhagen","country":"Denmark","rating":"4.7","area_type":"central","traveler_type":"friends","accommodation_type":"luxury_hotel"},{"property_name":"Cobalt Rooms","city":"Cairo","country":"Egypt","rating":"4.5","area_type":"central","traveler_type":"friends","accommodation_type":"budget_guesthouse"},{"property_name":"Cedar House Jakarta","city":"Jakarta","country":"Indonesia","rating":"4.2","area_type":"residential","traveler_type":"solo_female","accommodation_type":"mid_range_hotel"},{"property_name":"Cobalt Lodge","city":"Cape Town","country":"South Africa","rating":"4.8","area_type":"old_town","traveler_type":"family","accommodation_type":"budget_guesthouse"},{"property_name":"Meridian Lofts","city":"Amsterdam","country":"Netherlands","rating":"4.8","area_type":"nightlife_district","traveler_type":"business","accommodation_type":"budget_guesthouse"},{"property_name":"Riverside Inn","city":"Cairo","country":"Egypt","rating":"3.4","area_type":"nightlife_district","traveler_type":"solo","accommodation_type":"budget_guesthouse"},{"property_name":"Aster Rooms Cairo","city":"Cairo","country":"Egypt","rating":"4.3","area_type":"nightlife_district","traveler_type":"family","accommodation_type":"hostel"},{"property_name":"Cobalt Lofts","city":"Prague","country":"Czechia","rating":"4.5","area_type":"old_town","traveler_type":"friends","accommodation_type":"budget_guesthouse"},{"property_name":"Station Lodge","city":"Tokyo","country":"Japan","rating":"4.5","area_type":"old_town","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Orchid Rooms","city":"Berlin","country":"Germany","rating":"4.6","area_type":"transit_hub","traveler_type":"family","accommodation_type":"boutique_hotel"},{"property_name":"Cobalt Suites","city":"Mexico City","country":"Mexico","rating":"4.0","area_type":"old_town","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Cobalt Inn Milan","city":"Milan","country":"Italy","rating":"4.9","area_type":"central","traveler_type":"solo","accommodation_type":"budget_guesthouse"},{"property_name":"Canal Lofts","city":"Mexico City","country":"Mexico","rating":"3.2","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"boutique_hotel"},{"property_name":"Station Stay","city":"Paris","country":"France","rating":"4.5","area_type":"residential","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Harbor House Bogotá","city":"Bogotá","country":"Colombia","rating":"4.2","area_type":"transit_hub","traveler_type":"friends","accommodation_type":"budget_guesthouse"},{"property_name":"Cobalt Inn","city":"Vienna","country":"Austria","rating":"4.3","area_type":"central","traveler_type":"couple","accommodation_type":"hostel"},{"property_name":"Lantern Stay","city":"Mexico City","country":"Mexico","rating":"3.5","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Riverside Rooms","city":"Bogotá","country":"Colombia","rating":"1.7","area_type":"waterfront","traveler_type":"solo_female","accommodation_type":"mid_range_hotel"},{"property_name":"Nomad Inn","city":"Mexico City","country":"Mexico","rating":"3.7","area_type":"residential","traveler_type":"family","accommodation_type":"budget_guesthouse"},{"property_name":"Cedar Lodge Barcelona","city":"Barcelona","country":"Spain","rating":"3.9","area_type":"residential","traveler_type":"solo","accommodation_type":"luxury_hotel"},{"property_name":"Station Suites Dubai","city":"Dubai","country":"United Arab Emirates","rating":"3.6","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"hostel"},{"property_name":"Lantern Suites","city":"Copenhagen","country":"Denmark","rating":"4.6","area_type":"old_town","traveler_type":"friends","accommodation_type":"budget_guesthouse"},{"property_name":"Lantern House Barcelona","city":"Barcelona","country":"Spain","rating":"3.7","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Urban Stay Dubai","city":"Dubai","country":"United Arab Emirates","rating":"4.3","area_type":"old_town","traveler_type":"couple","accommodation_type":"luxury_hotel"},{"property_name":"Cedar House Copenhagen","city":"Copenhagen","country":"Denmark","rating":"4.7","area_type":"transit_hub","traveler_type":"family","accommodation_type":"hostel"},{"property_name":"Terrace House","city":"Seoul","country":"South Korea","rating":"2.0","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"boutique_hotel"},{"property_name":"Meridian House","city":"Vienna","country":"Austria","rating":"4.3","area_type":"transit_hub","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Cedar Suites","city":"Lisbon","country":"Portugal","rating":"3.6","area_type":"central","traveler_type":"solo","accommodation_type":"boutique_hotel"},{"property_name":"Cobalt Lodge","city":"Cape Town","country":"South Africa","rating":"4.6","area_type":"old_town","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Mosaic Residences","city":"Barcelona","country":"Spain","rating":"5.0","area_type":"residential","traveler_type":"family","accommodation_type":"mid_range_hotel"},{"property_name":"Aster House Cairo","city":"Cairo","country":"Egypt","rating":"2.1","area_type":"old_town","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Mosaic Lodge Bangkok","city":"Bangkok","country":"Thailand","rating":"3.7","area_type":"old_town","traveler_type":"business","accommodation_type":"boutique_hotel"},{"property_name":"Lantern Lodge","city":"Tokyo","country":"Japan","rating":"4.7","area_type":"central","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Orchid Stay","city":"Tokyo","country":"Japan","rating":"4.4","area_type":"nightlife_district","traveler_type":"business","accommodation_type":"boutique_hotel"},{"property_name":"Station Rooms","city":"Amsterdam","country":"Netherlands","rating":"4.4","area_type":"suburban","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Luma Inn Bogotá","city":"Bogotá","country":"Colombia","rating":"3.5","area_type":"old_town","traveler_type":"business","accommodation_type":"boutique_hotel"},{"property_name":"Urban Rooms","city":"Jakarta","country":"Indonesia","rating":"4.4","area_type":"transit_hub","traveler_type":"friends","accommodation_type":"budget_guesthouse"},{"property_name":"Luma Inn Cairo","city":"Cairo","country":"Egypt","rating":"4.6","area_type":"central","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Sol Inn","city":"Mexico City","country":"Mexico","rating":"3.5","area_type":"residential","traveler_type":"solo","accommodation_type":"mid_range_hotel"},{"property_name":"Harbor Rooms Tokyo","city":"Tokyo","country":"Japan","rating":"4.4","area_type":"suburban","traveler_type":"family","accommodation_type":"mid_range_hotel"},{"property_name":"Canal Inn","city":"Dubai","country":"United Arab Emirates","rating":"4.1","area_type":"central","traveler_type":"business","accommodation_type":"hostel"},{"property_name":"Canal Lodge","city":"Jakarta","country":"Indonesia","rating":"4.2","area_type":"central","traveler_type":"friends","accommodation_type":"luxury_hotel"},{"property_name":"Luma Inn Cairo","city":"Cairo","country":"Egypt","rating":"4.7","area_type":"central","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Cedar Inn Jakarta","city":"Jakarta","country":"Indonesia","rating":"4.3","area_type":"transit_hub","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Canal Suites","city":"Copenhagen","country":"Denmark","rating":"4.6","area_type":"old_town","traveler_type":"friends","accommodation_type":"boutique_hotel"},{"property_name":"Nomad House","city":"Tokyo","country":"Japan","rating":"4.9","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"budget_guesthouse"},{"property_name":"Lantern Lofts","city":"Milan","country":"Italy","rating":"4.4","area_type":"central","traveler_type":"couple","accommodation_type":"hostel"},{"property_name":"Nomad Lodge Jakarta","city":"Jakarta","country":"Indonesia","rating":"4.1","area_type":"suburban","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Station Rooms","city":"Amsterdam","country":"Netherlands","rating":"4.6","area_type":"suburban","traveler_type":"business","accommodation_type":"mid_range_hotel"},{"property_name":"Riverside Inn","city":"Rio de Janeiro","country":"Brazil","rating":"4.4","area_type":"transit_hub","traveler_type":"solo","accommodation_type":"mid_range_hotel"},{"property_name":"Cobalt Residences","city":"Bogotá","country":"Colombia","rating":"4.8","area_type":"residential","traveler_type":"couple","accommodation_type":"mid_range_hotel"},{"property_name":"Vista Residences","city":"Cairo","country":"Egypt","rating":"4.4","area_type":"nightlife_district","traveler_type":"family","accommodation_type":"budget_guesthouse"},{"property_name":"Meridian Lodge","city":"Bogotá","country":"Colombia","rating":"4.3","area_type":"central","traveler_type":"solo_female","accommodation_type":"mid_range_hotel"},{"property_name":"Meridian Lofts Mexico City","city":"Mexico City","country":"Mexico","rating":"4.3","area_type":"nightlife_district","traveler_type":"couple","accommodation_type":"boutique_hotel"},{"property_name":"Nomad Stay","city":"Amsterdam","country":"Netherlands","rating":"4.6","area_type":"suburban","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Harbor Lodge Amsterdam","city":"Amsterdam","country":"Netherlands","rating":"4.2","area_type":"nightlife_district","traveler_type":"solo_female","accommodation_type":"hostel"},{"property_name":"Cobalt Rooms","city":"Cairo","country":"Egypt","rating":"4.6","area_type":"central","traveler_type":"couple","accommodation_type":"budget_guesthouse"},{"property_name":"Lantern Suites","city":"Lisbon","country":"Portugal","rating":"4.2","area_type":"suburban","traveler_type":"friends","accommodation_type":"mid_range_hotel"},{"property_name":"Lantern House","city":"New York","country":"United States","rating":"4.8","area_type":"central","traveler_type":"couple","accommodation_type":"mid_range_hotel"}];
 
-// ── GLOBAL STATE ──────────────────────────────────────────────────────────────
-let selectedCity = '', selectedHotel = '', arrivalH = 0, arrivalM = 0;
+let selectedCity='',selectedHotel='',arrivalH=0,arrivalM=0;
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
-(function init() {
-  const cities = [...new Set(REVIEWS.map(r => r.city))].sort();
-  const cSel = document.getElementById('city-select');
-  cities.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; cSel.appendChild(o); });
-  const hSel = document.getElementById('arrival-hour');
-  for (let i = 0; i < 24; i++) { const o = document.createElement('option'); o.value = String(i).padStart(2, '0'); o.textContent = String(i).padStart(2, '0'); hSel.appendChild(o); }
-  const mSel = document.getElementById('arrival-min');
-  for (let i = 0; i < 60; i += 5) { const o = document.createElement('option'); o.value = String(i).padStart(2, '0'); o.textContent = String(i).padStart(2, '0'); mSel.appendChild(o); }
+(function init(){
+  const cities=[...new Set(REVIEWS.map(r=>r.city))].sort();
+  const cSel=document.getElementById('city-select');
+  cities.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;cSel.appendChild(o);});
+  const hSel=document.getElementById('arrival-hour');
+  for(let i=0;i<24;i++){const o=document.createElement('option');o.value=String(i).padStart(2,'0');o.textContent=String(i).padStart(2,'0');hSel.appendChild(o);}
+  const mSel=document.getElementById('arrival-min');
+  for(let i=0;i<60;i+=5){const o=document.createElement('option');o.value=String(i).padStart(2,'0');o.textContent=String(i).padStart(2,'0');mSel.appendChild(o);}
 })();
 
 // Splash screen: hide after 5 seconds
@@ -815,144 +829,145 @@ function showTab(id,btn){
   }
 }
 
-// ── HOTEL SELECTION ───────────────────────────────────────────────────────────
-function updateHotelList() {
-  const city = document.getElementById('city-select').value;
-  const sel = document.getElementById('hotel-select');
-  sel.innerHTML = '<option value="">Select a hotel...</option>';
-  if (!city) return;
-  const hotels = [...new Set(REVIEWS.filter(r => r.city === city).map(r => r.property_name))].sort();
-  hotels.forEach(h => { const o = document.createElement('option'); o.value = h; o.textContent = h; sel.appendChild(o); });
+function updateHotelList(){
+  const city=document.getElementById('city-select').value;
+  const sel=document.getElementById('hotel-select');
+  sel.innerHTML='<option value="">Select a hotel...</option>';
+  if(!city)return;
+  const hotels=[...new Set(REVIEWS.filter(r=>r.city===city).map(r=>r.property_name))].sort();
+  hotels.forEach(h=>{const o=document.createElement('option');o.value=h;o.textContent=h;sel.appendChild(o);});
 }
 
-function getScoreColor(score) {
-  if (score >= 70) return { arc: '#0e8c6a', verdict: 'Very safe', verdictColor: 'var(--teal)', pillClass: '' };
-  if (score >= 50) return { arc: '#d97706', verdict: 'Moderate', verdictColor: 'var(--amber)', pillClass: 'warn' };
-  return { arc: '#c0392b', verdict: 'Use caution', verdictColor: 'var(--red)', pillClass: 'bad' };
+function getScoreColor(score){
+  if(score>=70)return{arc:'#0e8c6a',verdict:'Very safe',verdictColor:'var(--teal)',pillClass:''};
+  if(score>=50)return{arc:'#d97706',verdict:'Moderate',verdictColor:'var(--amber)',pillClass:'warn'};
+  return{arc:'#c0392b',verdict:'Use caution',verdictColor:'var(--red)',pillClass:'bad'};
 }
 
-function getMockCriteria(score, area, avg) {
-  const clamp = (v, mn, mx) => Math.min(mx, Math.max(mn, Math.round(v)));
-  const jitter = (base, spread) => clamp(base + (Math.random() - 0.5) * spread * 2, 10, 100);
-  const nightlifeArea = area === 'nightlife_district';
-  const waterfront = area === 'waterfront';
-  const transit = area === 'transit_hub';
-  return [
-    { lbl: 'Traveller reviews', val: clamp(Math.round((avg - 1) / 4 * 100), 20, 100) },
-    { lbl: 'Area crime index', val: jitter(score + 5, 10) },
-    { lbl: 'Night safety', val: jitter(nightlifeArea ? score - 15 : score + 5, 12) },
-    { lbl: 'Transport safety', val: jitter(transit ? score + 10 : score, 8) },
-    { lbl: 'Solo female rating', val: jitter(score + 3, 14) },
-    { lbl: 'Staff responsiveness', val: jitter(score + 8, 10) },
-    { lbl: 'Lighting & CCTV', val: jitter(waterfront ? score - 8 : score + 4, 10) },
-    { lbl: 'Emergency access', val: jitter(score + 12, 8) },
+function getMockCriteria(score,area,avg){
+  const seed=score;
+  const clamp=(v,mn,mx)=>Math.min(mx,Math.max(mn,Math.round(v)));
+  const jitter=(base,spread)=>clamp(base+(Math.random()-0.5)*spread*2,10,100);
+  const nightlifeArea=area==='nightlife_district';
+  const waterfront=area==='waterfront';
+  const transit=area==='transit_hub';
+  return[
+    {lbl:'Traveller reviews',val:clamp(Math.round((avg-1)/4*100),20,100)},
+    {lbl:'Area crime index',val:jitter(score+5,10)},
+    {lbl:'Night safety',val:jitter(nightlifeArea?score-15:score+5,12)},
+    {lbl:'Transport safety',val:jitter(transit?score+10:score,8)},
+    {lbl:'Solo female rating',val:jitter(score+3,14)},
+    {lbl:'Staff responsiveness',val:jitter(score+8,10)},
+    {lbl:'Lighting & CCTV',val:jitter(waterfront?score-8:score+4,10)},
+    {lbl:'Emergency access',val:jitter(score+12,8)},
   ];
 }
 
-function getInsights(reviews) {
-  const chips = [];
-  const avgRating = reviews.reduce((s, r) => s + parseFloat(r.rating), 0) / reviews.length;
-  const hasSoloFemale = reviews.some(r => r.traveler_type === 'solo_female');
-  const area = reviews[0]?.area_type || '';
-  if (avgRating >= 4.2) chips.push({ pos: true, text: 'Well reviewed' });
-  if (hasSoloFemale && avgRating >= 4.0) chips.push({ pos: true, text: 'Solo female friendly' });
-  if (area === 'central') chips.push({ pos: true, text: 'Central location' });
-  if (area === 'nightlife_district') chips.push({ pos: false, text: 'Nightlife area – be aware' });
-  if (area === 'waterfront') chips.push({ pos: true, text: 'Waterfront area' });
-  if (avgRating < 3.5) chips.push({ pos: false, text: 'Mixed reviews' });
-  if (avgRating < 2.5) chips.push({ pos: false, text: 'Low rated property' });
-  return chips.slice(0, 6);
+function getInsights(reviews){
+  const chips=[];
+  const avgRating=reviews.reduce((s,r)=>s+parseFloat(r.rating),0)/reviews.length;
+  const hasSoloFemale=reviews.some(r=>r.traveler_type==='solo_female');
+  const area=reviews[0]?.area_type||'';
+  if(avgRating>=4.2)chips.push({pos:true,text:'Well reviewed'});
+  if(hasSoloFemale&&avgRating>=4.0)chips.push({pos:true,text:'Solo female friendly'});
+  if(area==='central')chips.push({pos:true,text:'Central location'});
+  if(area==='nightlife_district')chips.push({pos:false,text:'Nightlife area – be aware'});
+  if(area==='waterfront')chips.push({pos:true,text:'Waterfront area'});
+  if(avgRating<3.5)chips.push({pos:false,text:'Mixed reviews'});
+  if(avgRating<2.5)chips.push({pos:false,text:'Low rated property'});
+  return chips.slice(0,6);
 }
 
-function selectHotel() {
-  const city = document.getElementById('city-select').value;
-  const hotel = document.getElementById('hotel-select').value;
-  if (!city || !hotel) { showToast('Please select a city and hotel'); return; }
-  selectedCity = city; selectedHotel = hotel;
-  const reviews = REVIEWS.filter(r => r.city === city && r.property_name === hotel);
-  const avg = reviews.reduce((s, r) => s + parseFloat(r.rating), 0) / reviews.length;
-  const score = Math.round((avg - 1) / 4 * 100);
-  const col = getScoreColor(score);
-  const area = (reviews[0]?.area_type || '').replace(/_/g, ' ');
-  const areaRaw = reviews[0]?.area_type || '';
+function selectHotel(){
+  const city=document.getElementById('city-select').value;
+  const hotel=document.getElementById('hotel-select').value;
+  if(!city||!hotel){showToast('Please select a city and hotel');return;}
+  selectedCity=city;selectedHotel=hotel;
+  const reviews=REVIEWS.filter(r=>r.city===city&&r.property_name===hotel);
+  const avg=reviews.reduce((s,r)=>s+parseFloat(r.rating),0)/reviews.length;
+  const score=Math.round((avg-1)/4*100);
+  const col=getScoreColor(score);
+  const area=(reviews[0]?.area_type||'').replace(/_/g,' ');
+  const areaRaw=reviews[0]?.area_type||'';
 
-  document.getElementById('detail-name').textContent = hotel;
-  document.getElementById('detail-loc').textContent = '📍 ' + area + ', ' + city;
-  document.getElementById('detail-rating').textContent = '★ ' + avg.toFixed(1);
-  document.getElementById('detail-safety').textContent = 'Safety score ' + score;
-  const pill = document.getElementById('detail-pill');
-  pill.className = 'safety-pill ' + (col.pillClass || '');
-  document.getElementById('score-num').textContent = score;
-  document.getElementById('score-verdict').textContent = col.verdict;
-  document.getElementById('score-verdict').style.color = col.verdictColor;
-  const dash = Math.round(226 * score / 100);
-  const arc = document.getElementById('score-arc');
-  arc.setAttribute('stroke', col.arc);
-  arc.setAttribute('stroke-dasharray', dash + ' 226');
+  document.getElementById('detail-name').textContent=hotel;
+  document.getElementById('detail-loc').textContent='📍 '+area+', '+city;
+  document.getElementById('detail-rating').textContent='★ '+avg.toFixed(1);
+  document.getElementById('detail-safety').textContent='Safety score '+score;
+  const pill=document.getElementById('detail-pill');
+  pill.className='safety-pill '+(col.pillClass||'');
+  document.getElementById('score-num').textContent=score;
+  document.getElementById('score-verdict').textContent=col.verdict;
+  document.getElementById('score-verdict').style.color=col.verdictColor;
+  const dash=Math.round(226*score/100);
+  const arc=document.getElementById('score-arc');
+  arc.setAttribute('stroke',col.arc);
+  arc.setAttribute('stroke-dasharray',dash+' 226');
 
-  const criteria = getMockCriteria(score, areaRaw, avg);
-  const list = document.getElementById('breakdown-list');
-  list.innerHTML = criteria.map(c => {
-    const c2 = getScoreColor(c.val);
-    return `<div class="breakdown-row">
+  const criteria=getMockCriteria(score,areaRaw,avg);
+  const list=document.getElementById('breakdown-list');
+  list.innerHTML=criteria.map(c=>{
+    const c2=getScoreColor(c.val);
+    return`<div class="breakdown-row">
       <span class="breakdown-lbl">${c.lbl}</span>
       <div class="bar-track"><div class="bar-fill" style="background:${c2.arc};width:0%" data-w="${c.val}"></div></div>
       <span class="bar-num" style="color:${c2.arc}">${c.val}</span>
     </div>`;
   }).join('');
-  setTimeout(() => { list.querySelectorAll('.bar-fill').forEach(b => { b.style.width = b.dataset.w + '%'; }); }, 50);
+  setTimeout(()=>{list.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.w+'%';});},50);
 
-  const insights = getInsights(reviews);
-  document.getElementById('detail-insights').innerHTML = insights.map(c => `<span class="insight-chip ${c.pos ? 'chip-pos' : 'chip-neg'}">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${c.pos ? '<polyline points="20 6 9 17 4 12"/>' : '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}</svg>
+  const insights=getInsights(reviews);
+  document.getElementById('detail-insights').innerHTML=insights.map(c=>`<span class="insight-chip ${c.pos?'chip-pos':'chip-neg'}">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">${c.pos?'<polyline points="20 6 9 17 4 12"/>':'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>'}</svg>
     ${c.text}</span>`).join('');
 
-  document.getElementById('hotel-picker').style.display = 'none';
-  document.getElementById('hotel-detail').style.display = 'block';
+  document.getElementById('hotel-picker').style.display='none';
+  document.getElementById('hotel-detail').style.display='block';
 }
 
-function backToList() {
-  document.getElementById('hotel-picker').style.display = 'block';
-  document.getElementById('hotel-detail').style.display = 'none';
+function backToList(){
+  document.getElementById('hotel-picker').style.display='block';
+  document.getElementById('hotel-detail').style.display='none';
 }
 
-function bookNow() {
-  const name = document.getElementById('detail-name').textContent;
-  const city = selectedCity;
-  document.getElementById('booked-msg').textContent = name + ' in ' + city + ' is booked! Your personalised safety guide is now ready.';
-  document.getElementById('after-city').textContent = city;
-  document.getElementById('after-banner-text').textContent = 'Booking confirmed · ' + name + ' · Your safety guide is ready';
-  document.getElementById('hotel-phone-lbl').textContent = name;
+function bookNow(){
+  const name=document.getElementById('detail-name').textContent;
+  const city=selectedCity;
+  document.getElementById('booked-msg').textContent=name+' in '+city+' is booked! Your personalised safety guide is now ready.';
+  document.getElementById('after-city').textContent=city;
+  document.getElementById('after-banner-text').textContent='Booking confirmed · '+name+' · Your safety guide is ready';
+  document.getElementById('hotel-phone-lbl').textContent=name;
   buildHeatmap(city);
   openModal('booked-modal');
 }
 
-// ── SAFE ARRIVAL ──────────────────────────────────────────────────────────────
-function confirmDestination() {
-  const dest = document.getElementById('dest-input').value.trim();
-  const h = document.getElementById('arrival-hour').value;
-  const m = document.getElementById('arrival-min').value;
-  if (!dest || !h || !m) { openModal('error-modal'); return; }
-  arrivalH = parseInt(h); arrivalM = parseInt(m);
-  const circle = document.getElementById('checkin-circle');
-  circle.textContent = '⏱️'; circle.className = 'checkin-circle extend';
-  document.getElementById('checkin-title').textContent = 'Awaiting check-in';
-  document.getElementById('checkin-sub').textContent = 'Expected arrival at ' + dest + '\n' + h + ':' + m;
-  document.getElementById('destination-input').style.display = 'none';
-  document.getElementById('checkin-card').style.display = 'block';
-  document.getElementById('safe-confirmed').style.display = 'none';
+function confirmDestination(){
+  const dest=document.getElementById('dest-input').value.trim();
+  const h=document.getElementById('arrival-hour').value;
+  const m=document.getElementById('arrival-min').value;
+  if(!dest||!h||!m){openModal('error-modal');return;}
+  arrivalH=parseInt(h);arrivalM=parseInt(m);
+  const circle=document.getElementById('checkin-circle');
+  circle.textContent='⏱️';circle.className='checkin-circle extend';
+  document.getElementById('checkin-title').textContent='Awaiting check-in';
+  document.getElementById('checkin-sub').textContent='Expected arrival at '+dest+'\n'+h+':'+m;
+  document.getElementById('destination-input').style.display='none';
+  document.getElementById('checkin-card').style.display='block';
+  document.getElementById('safe-confirmed').style.display='none';
 }
 
-function doCheckin(type) {
-  const circle = document.getElementById('checkin-circle');
-  if (type === 'safe') {
-    document.getElementById('checkin-card').style.display = 'none';
-    document.getElementById('safe-confirmed').style.display = 'block';
-    circle.textContent = '✅'; circle.className = 'checkin-circle safe';
-    document.getElementById('checkin-title').textContent = 'Safely arrived!';
-    document.getElementById('checkin-sub').textContent = 'Mama and Sara have been notified.\nEnjoy your stay!';
+function doCheckin(type){
+  const circle=document.getElementById('checkin-circle');
+  if(type==='safe'){
+    // immediately hide actions, show confirmed state
+    document.getElementById('checkin-card').style.display='none';
+    document.getElementById('safe-confirmed').style.display='block';
+    circle.textContent='✅';circle.className='checkin-circle safe';
+    document.getElementById('checkin-title').textContent='Safely arrived!';
+    document.getElementById('checkin-sub').textContent='Mama and Sara have been notified.\nEnjoy your stay!';
     showToast('✓ Contacts notified — safe arrival confirmed');
-    setTimeout(() => {
+    // after 5s reset and switch tab
+    setTimeout(()=>{
       resetCheckin();
       showTab('arrival',document.getElementById('arrival-tab-btn'));
     },5000);
@@ -967,24 +982,24 @@ function doCheckin(type) {
     document.getElementById('checkin-sub').textContent='New check-in deadline: '+newTime+'.\nContacts will be alerted if not confirmed.';
     showToast('⏰ Check-in extended to '+newTime);
   } else {
-    circle.textContent = '🚨'; circle.className = 'checkin-circle alert';
-    document.getElementById('checkin-title').textContent = 'Alert sent to contacts';
-    document.getElementById('checkin-sub').textContent = 'Mama and Sara have been notified\nwith your last known location.';
+    circle.textContent='🚨';circle.className='checkin-circle alert';
+    document.getElementById('checkin-title').textContent='Alert sent to contacts';
+    document.getElementById('checkin-sub').textContent='Mama and Sara have been notified\nwith your last known location.';
     showToast('🚨 Emergency alert sent to your contacts');
   }
 }
 
-function resetCheckin() {
-  document.getElementById('checkin-card').style.display = 'none';
-  document.getElementById('safe-confirmed').style.display = 'none';
-  document.getElementById('destination-input').style.display = 'block';
-  document.getElementById('dest-input').value = '';
-  document.getElementById('arrival-hour').value = '';
-  document.getElementById('arrival-min').value = '';
-  const circle = document.getElementById('checkin-circle');
-  circle.textContent = '🗺️'; circle.className = 'checkin-circle';
-  document.getElementById('checkin-title').textContent = 'Plan a new destination';
-  document.getElementById('checkin-sub').textContent = 'Enter your destination below to start tracking your arrival';
+function resetCheckin(){
+  document.getElementById('checkin-card').style.display='none';
+  document.getElementById('safe-confirmed').style.display='none';
+  document.getElementById('destination-input').style.display='block';
+  document.getElementById('dest-input').value='';
+  document.getElementById('arrival-hour').value='';
+  document.getElementById('arrival-min').value='';
+  const circle=document.getElementById('checkin-circle');
+  circle.textContent='🗺️';circle.className='checkin-circle';
+  document.getElementById('checkin-title').textContent='Plan a new destination';
+  document.getElementById('checkin-sub').textContent='Enter your destination below to start tracking your arrival';
 }
 
 function pickExtendPill(btn){
@@ -1001,40 +1016,39 @@ function updateExtendLabel(){
   document.getElementById('extend-label').textContent=labels[v]||v+' min';
 }
 
-// ── MODALS & TOASTS ───────────────────────────────────────────────────────────
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
 let toastTimeout;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
   clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
+  toastTimeout=setTimeout(()=>t.classList.remove('show'),2800);
 }
 
-// ── HEATMAP ───────────────────────────────────────────────────────────────────
+// ── HEATMAP ──────────────────────────────────────────────────────────────────
 const AREA_LAYOUT = {
-  central:           { x: 170, y: 90,  w: 100, h: 80,  label: 'City Centre' },
-  old_town:          { x: 80,  y: 60,  w: 90,  h: 70,  label: 'Old Town' },
-  nightlife_district:{ x: 270, y: 60,  w: 100, h: 70,  label: 'Nightlife District' },
-  waterfront:        { x: 320, y: 150, w: 110, h: 70,  label: 'Waterfront' },
-  transit_hub:       { x: 60,  y: 150, w: 100, h: 70,  label: 'Transit Hub' },
-  residential:       { x: 170, y: 185, w: 100, h: 65,  label: 'Residential' },
-  suburban:          { x: 10,  y: 10,  w: 80,  h: 55,  label: 'Suburban' },
+  central:           {x:170, y:90,  w:100, h:80,  label:'City Centre'},
+  old_town:          {x:80,  y:60,  w:90,  h:70,  label:'Old Town'},
+  nightlife_district:{x:270, y:60,  w:100, h:70,  label:'Nightlife District'},
+  waterfront:        {x:320, y:150, w:110, h:70,  label:'Waterfront'},
+  transit_hub:       {x:60,  y:150, w:100, h:70,  label:'Transit Hub'},
+  residential:       {x:170, y:185, w:100, h:65,  label:'Residential'},
+  suburban:          {x:10,  y:10,  w:80,  h:55,  label:'Suburban'},
 };
 const TRANSPORT_STOPS = [
-  { x: 108, y: 185, label: 'Central Station', sub: 'Metro · Bus · Night lines' },
-  { x: 220, y: 130, label: 'City Centre Stop', sub: 'Tram · Metro' },
-  { x: 375, y: 185, label: 'Harbour Ferry', sub: 'Ferry · Water taxi' },
-  { x: 310, y: 95,  label: 'Nightlife Hub', sub: 'Night bus · Taxi rank' },
+  {x:108, y:185, label:'Central Station', sub:'Metro · Bus · Night lines'},
+  {x:220, y:130, label:'City Centre Stop', sub:'Tram · Metro'},
+  {x:375, y:185, label:'Harbour Ferry', sub:'Ferry · Water taxi'},
+  {x:310, y:95,  label:'Nightlife Hub', sub:'Night bus · Taxi rank'},
 ];
 const EMERGENCY_SVCS = [
-  { x: 200, y: 115, label: 'Main Hospital', sub: '24h A&E · Ambulance' },
-  { x: 90,  y: 175, label: 'Police Station', sub: 'Non-urgent: local number' },
-  { x: 355, y: 160, label: 'Coastguard', sub: 'Water emergencies' },
+  {x:200, y:115, label:'Main Hospital', sub:'24h A&E · Ambulance'},
+  {x:90,  y:175, label:'Police Station', sub:'Non-urgent: local number'},
+  {x:355, y:160, label:'Coastguard', sub:'Water emergencies'},
 ];
 
-let heatmapLayers = { zones: true, hotels: false, transport: false, emergency: false };
+let heatmapLayers = {zones:true, hotels:false, transport:false, emergency:false};
 let heatmapCity = '';
 
 function buildHeatmap(city) {
@@ -1043,19 +1057,24 @@ function buildHeatmap(city) {
   if (!svg) return;
   const cityLabel = document.getElementById('heatmap-city-label');
   if (cityLabel) cityLabel.textContent = heatmapCity;
+
+  // Per-area scores from REVIEWS
   const cityReviews = REVIEWS.filter(r => r.city === heatmapCity);
-  const areaScores = {}, areaHotels = {};
+  const areaScores = {};
+  const areaHotels = {};
   Object.keys(AREA_LAYOUT).forEach(a => {
     const rs = cityReviews.filter(r => r.area_type === a);
     if (rs.length) {
-      const avg = rs.reduce((s, r) => s + parseFloat(r.rating), 0) / rs.length;
-      areaScores[a] = Math.round((avg - 1) / 4 * 100);
-      areaHotels[a] = [...new Set(rs.map(r => r.property_name))];
+      const avg = rs.reduce((s,r)=>s+parseFloat(r.rating),0)/rs.length;
+      areaScores[a] = Math.round((avg-1)/4*100);
+      areaHotels[a] = [...new Set(rs.map(r=>r.property_name))];
     } else {
+      // No data for this city — use a neutral mid score
       areaScores[a] = 55;
       areaHotels[a] = [];
     }
   });
+
   function zoneColor(score, opacity) {
     if (score >= 70) return `rgba(14,140,106,${opacity})`;
     if (score >= 50) return `rgba(217,119,6,${opacity})`;
@@ -1066,7 +1085,10 @@ function buildHeatmap(city) {
     if (score >= 50) return 'Moderate';
     return 'Use caution';
   }
+
   let svgContent = '';
+
+  // Street grid background lines
   svgContent += `<g opacity="0.25" stroke="#b8cef5" stroke-width="1">
     <line x1="0" y1="130" x2="440" y2="130"/>
     <line x1="0" y1="65" x2="440" y2="65"/>
@@ -1075,51 +1097,58 @@ function buildHeatmap(city) {
     <line x1="220" y1="0" x2="220" y2="260"/>
     <line x1="330" y1="0" x2="330" y2="260"/>
   </g>`;
+
+  // Safety zones
   if (heatmapLayers.zones) {
     Object.entries(AREA_LAYOUT).forEach(([key, zone]) => {
       const score = areaScores[key];
-      const fill = zoneColor(score, 0.55);
+      const fill  = zoneColor(score, 0.55);
       const stroke = zoneColor(score, 0.9);
       const hotels = areaHotels[key];
-      const hotelList = hotels.length ? hotels.slice(0, 3).join(', ') : 'No data';
+      const hotelList = hotels.length ? hotels.slice(0,3).join(', ') : 'No data';
       const tipText = `${zone.label}\\nScore: ${score}/100 — ${scoreLabel(score)}\\n${hotelList}`;
       svgContent += `<rect x="${zone.x}" y="${zone.y}" width="${zone.w}" height="${zone.h}"
         rx="8" fill="${fill}" stroke="${stroke}" stroke-width="1.5" style="cursor:pointer"
-        onmouseenter="showHeatmapTip(event,'${tipText.replace(/'/g, "&#39;")}')"
-        ontouchstart="showHeatmapTip(event,'${tipText.replace(/'/g, "&#39;")}')"
+        onmouseenter="showHeatmapTip(event,'${tipText.replace(/'/g,"&#39;")}')"
+        ontouchstart="showHeatmapTip(event,'${tipText.replace(/'/g,"&#39;")}')"
         onmouseleave="hideHeatmapTip()" ontouchend="hideHeatmapTip()"/>`;
-      const cx = zone.x + zone.w / 2;
-      const cy = zone.y + zone.h / 2;
-      svgContent += `<text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="9" font-weight="600"
+      // Zone label
+      const cx = zone.x + zone.w/2;
+      const cy = zone.y + zone.h/2;
+      svgContent += `<text x="${cx}" y="${cy-6}" text-anchor="middle" font-size="9" font-weight="600"
         fill="white" style="pointer-events:none;text-shadow:0 1px 2px rgba(0,0,0,0.5)">${zone.label}</text>`;
-      svgContent += `<text x="${cx}" y="${cy + 8}" text-anchor="middle" font-size="9"
+      svgContent += `<text x="${cx}" y="${cy+8}" text-anchor="middle" font-size="9"
         fill="rgba(255,255,255,0.9)" style="pointer-events:none">${score}/100</text>`;
     });
   }
+
+  // Hotel markers
   if (heatmapLayers.hotels) {
     const hotelPositions = [
-      { x: 220, y: 130, area: 'central' },
-      { x: 125, y: 95,  area: 'old_town' },
-      { x: 320, y: 95,  area: 'nightlife_district' },
-      { x: 375, y: 185, area: 'waterfront' },
-      { x: 110, y: 185, area: 'transit_hub' },
-      { x: 220, y: 218, area: 'residential' },
-      { x: 50,  y: 37,  area: 'suburban' },
+      {x:220, y:130, area:'central'},
+      {x:125, y:95,  area:'old_town'},
+      {x:320, y:95,  area:'nightlife_district'},
+      {x:375, y:185, area:'waterfront'},
+      {x:110, y:185, area:'transit_hub'},
+      {x:220, y:218, area:'residential'},
+      {x:50,  y:37,  area:'suburban'},
     ];
     hotelPositions.forEach(p => {
       const hotels = areaHotels[p.area] || [];
       const preview = hotels.length ? hotels[0] : 'No hotels';
-      const more = hotels.length > 1 ? `+${hotels.length - 1} more` : '';
-      const tip = `📍 ${preview}${more ? '\\n' + more : ''}\\n${AREA_LAYOUT[p.area]?.label || ''}`;
+      const more = hotels.length > 1 ? `+${hotels.length-1} more` : '';
+      const tip = `📍 ${preview}${more ? '\\n'+more : ''}\\n${AREA_LAYOUT[p.area]?.label||''}`;
       svgContent += `<g style="cursor:pointer"
-        onmouseenter="showHeatmapTip(event,'${tip.replace(/'/g, "&#39;")}')"
-        ontouchstart="showHeatmapTip(event,'${tip.replace(/'/g, "&#39;")}')"
+        onmouseenter="showHeatmapTip(event,'${tip.replace(/'/g,"&#39;")}')"
+        ontouchstart="showHeatmapTip(event,'${tip.replace(/'/g,"&#39;")}')"
         onmouseleave="hideHeatmapTip()" ontouchend="hideHeatmapTip()">
         <circle cx="${p.x}" cy="${p.y}" r="10" fill="white" stroke="#003580" stroke-width="1.5"/>
-        <text x="${p.x}" y="${p.y + 4}" text-anchor="middle" font-size="11">📍</text>
+        <text x="${p.x}" y="${p.y+4}" text-anchor="middle" font-size="11">📍</text>
       </g>`;
     });
   }
+
+  // Transport markers
   if (heatmapLayers.transport) {
     TRANSPORT_STOPS.forEach(t => {
       const tip = `🚉 ${t.label}\\n${t.sub}`;
@@ -1127,11 +1156,13 @@ function buildHeatmap(city) {
         onmouseenter="showHeatmapTip(event,'${tip}')"
         ontouchstart="showHeatmapTip(event,'${tip}')"
         onmouseleave="hideHeatmapTip()" ontouchend="hideHeatmapTip()">
-        <rect x="${t.x - 10}" y="${t.y - 10}" width="20" height="20" rx="4" fill="#003580"/>
-        <text x="${t.x}" y="${t.y + 5}" text-anchor="middle" font-size="12">🚉</text>
+        <rect x="${t.x-10}" y="${t.y-10}" width="20" height="20" rx="4" fill="#003580"/>
+        <text x="${t.x}" y="${t.y+5}" text-anchor="middle" font-size="12">🚉</text>
       </g>`;
     });
   }
+
+  // Emergency markers
   if (heatmapLayers.emergency) {
     EMERGENCY_SVCS.forEach(e => {
       const tip = `🏥 ${e.label}\\n${e.sub}`;
@@ -1140,10 +1171,11 @@ function buildHeatmap(city) {
         ontouchstart="showHeatmapTip(event,'${tip}')"
         onmouseleave="hideHeatmapTip()" ontouchend="hideHeatmapTip()">
         <circle cx="${e.x}" cy="${e.y}" r="11" fill="#c0392b"/>
-        <text x="${e.x}" y="${e.y + 5}" text-anchor="middle" font-size="12">🏥</text>
+        <text x="${e.x}" y="${e.y+5}" text-anchor="middle" font-size="12">🏥</text>
       </g>`;
     });
   }
+
   svg.innerHTML = svgContent;
 }
 
@@ -1166,8 +1198,8 @@ function showHeatmapTip(e, text) {
   const tip = document.getElementById('heatmap-tooltip');
   if (!tip) return;
   tip.style.display = 'block';
-  tip.innerHTML = text.split('\\n').map((l, i) =>
-    i === 0 ? `<strong>${l}</strong>` : `<span style="color:rgba(255,255,255,0.75)">${l}</span>`
+  tip.innerHTML = text.split('\\n').map((l,i)=>
+    i===0 ? `<strong>${l}</strong>` : `<span style="color:rgba(255,255,255,0.75)">${l}</span>`
   ).join('<br>');
   const rect = document.getElementById('heatmap-svg').getBoundingClientRect();
   const cx = e.clientX || (e.touches && e.touches[0].clientX) || 0;
@@ -1184,7 +1216,7 @@ function hideHeatmapTip() {
   if (tip) tip.style.display = 'none';
 }
 
-document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('open'); }));
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')}));
 
 // ── AI COMPANION CHATBOT ──────────────────────────────────────────────────────
 let activeChatScreen = 'home';
