@@ -1,10 +1,16 @@
-# SafeTravel ·  Booking.com 🌌✈️
+>     1st Place Hackathon Winner – Booking.com Challenge (Hack4Her 2026, Eindhoven)
+
+> This website was created as part of **hack4her 2026** in Eindhoven where the main objective was to come up with a solution designed to empower female solo travellers and enhance their security while exploring the world. 
+> Engineered as a direct feature concept for **Booking.com**, this prototype demonstrates how safety insights, community trust, and seamless UI integration can transform the solo travel experience. 
+>The project was awarded **1st Place** in the official Booking.com Challenge track.
+
+
+# SafeTravel ·  Booking.com 
 
 **SafeTravel** is a mobile-first web application designed to empower travelers, especially solo female and safety-conscious travelers with real-time safety insights, interactive neighborhood safety maps, automated arrival check-ins, and an AI powered safety companion.
 
----
 
-## 🌟 Features
+##  Features
 
 ### 1. Before Booking (Property & Safety Insights)
 * **Property Safety Score**: View data-backed safety scores (0–100) calculated from verified traveler reviews, crime indices, night lighting, and transit availability.
@@ -34,33 +40,11 @@
   * *"I feel unsafe — what should I do?"*
 * **Dynamic Follow-Ups**: Powered by Anthropic's Claude API for personalized follow-up safety advice.
 
----
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 * **Frontend**: Single-file HTML5, CSS3 (Custom Variables, Flexbox, Grid), and Vanilla JavaScript.
 * **Typography**: Google Fonts (`DM Sans` & `DM Serif Display`).
 * **Mapping**: Lightweight inline SVG-based interactive map rendering.
 * **AI Integration**: Anthropic Claude API (`claude-sonnet-4-6`) integration for real-time natural language responses.
 * **Data Layer**: Embedded JSON data structure containing structured hotel and safety review metadata across global destinations.
-
----
-
-## 🚀 Getting Started
-
-Because **SafeTravel** is built as a self-contained web application, running it requires no complex build tools or server setup.
-
-### Prerequisites
-* Any modern web browser (Chrome, Safari, Firefox, Edge).
-* An internet connection (to load Google Fonts and process AI Companion requests via API).
-
-### Quick Start
-1. **Clone the repository**:
-   ```bash
-   git clone [https://github.com/erin12028/hack4her-.git](https://github.com/erin12028/hack4her-.git)
-   cd hack4her-
-2. **Open the application:**
-Simply open safetravel.html directly in your browser:
-- macOS: `open safetravel.html`
-- Linux: `xdg-open safetravel.html`
-- Windows: Double-click safetravel.html in File Explorer.
